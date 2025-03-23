@@ -21,6 +21,7 @@ export const fetchFilteredProducts = createAsyncThunk(
 
 const initialState: ProductState = {
     products: [],
+    darkMode: false,
     cart: [],
     loading: 'idle',
     filterLoading: 'idle',
@@ -65,6 +66,9 @@ const productSlice = createSlice({
                 }
             }
         },
+        toggleDarkMode: (state, action: PayloadAction<boolean>) => {
+            state.darkMode = action.payload;
+        },
     },
     extraReducers: (builder) => {
         const handlePending = (state: ProductState) => {
@@ -77,7 +81,7 @@ const productSlice = createSlice({
             state.products = action.payload;
         };
 
-        const handleRejected = (state: ProductState, action: unknown) => { 
+        const handleRejected = (state: ProductState, action: unknown) => {
             state.loading = 'failed';
             state.error = (action as any).error?.message || "Ürünler yüklenirken bir hata oluştu.";
         };
@@ -95,7 +99,7 @@ const productSlice = createSlice({
                 state.filterLoading = 'succeeded';
                 state.products = action.payload;
             })
-            .addCase(fetchFilteredProducts.rejected, (state, action: unknown) => { 
+            .addCase(fetchFilteredProducts.rejected, (state, action: unknown) => {
                 state.filterLoading = 'failed';
                 state.filterError = (action as any).error?.message || "Filtrelenmiş ürünler yüklenirken bir hata oluştu.";
             });
@@ -103,7 +107,7 @@ const productSlice = createSlice({
 });
 
 export default productSlice.reducer;
-export const { addToCart, removeFromCart, clearCart, setCart, increaseQuantity, decreaseQuantity } = productSlice.actions;
+export const { addToCart, removeFromCart, clearCart, setCart, increaseQuantity, decreaseQuantity, toggleDarkMode,  } = productSlice.actions;
 
 // Selector'lar
 export const selectProducts = (state: { products: ProductState }) => state.products.products;
@@ -112,3 +116,4 @@ export const selectLoading = (state: { products: ProductState }) => state.produc
 export const selectError = (state: { products: ProductState }) => state.products.error;
 export const selectFilterLoading = (state: { products: ProductState }) => state.products.filterLoading;
 export const selectFilterError = (state: { products: ProductState }) => state.products.filterError;
+export const selectDarkMode = (state: { products: ProductState }) => state.products.darkMode;

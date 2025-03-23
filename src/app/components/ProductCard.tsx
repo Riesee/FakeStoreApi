@@ -1,18 +1,19 @@
 import React from 'react';
 import { CartItem, ProductCardProps } from '../types/Product';
 import { addToCart } from '../store/reducers/productSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useCookies } from 'react-cookie';
-
+import { selectDarkMode } from '../store/reducers/productSlice';
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const dispatch = useDispatch();
     const [cookies, setCookie] = useCookies(['cart']);
+    const darkMode = useSelector(selectDarkMode);
 
     const addCart = () => {
         dispatch(addToCart(product));
-        toast.success('Ürün sepete eklendi!', {
+        toast.success('Product added to cart!', {
             position: "bottom-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -20,7 +21,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: darkMode ? "dark" : "light",
         });
 
         const cartCookie: CartItem[] = cookies.cart || [];
@@ -40,7 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full relative">
+        <div className={`rounded-lg shadow-md overflow-hidden flex flex-col h-full relative ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'}`}>
             <div className="relative">
                 <img
                     src={product.image}
@@ -50,17 +51,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
 
             <div className="p-4 flex-grow">
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">{product.title}</h2>
-                <p className="text-gray-600 text-sm mb-3">{product.description.substring(0, 100)}...</p>
+                <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-800'} mb-2`}>{product.title}</h2>
+                <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm mb-3`}>{product.description.substring(0, 100)}...</p>
             </div>
 
-            <div className="p-4 border-t border-gray-200 flex items-center justify-between">
-                <span className="text-gray-700 font-bold text-xl">${product.price}</span>
+            <div className={`p-4 flex items-center justify-between ${darkMode ? 'border-gray-700 border-t' : 'border-t border-gray-200'}`}>
+                <span className={`font-bold text-xl ${darkMode ? 'text-white' : 'text-gray-700'}`}>${product.price}</span>
                 <button
                     onClick={addCart}
                     className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
                 >
-                    Sepete Ekle
+                    Add to Cart
                 </button>
             </div>
         </div>

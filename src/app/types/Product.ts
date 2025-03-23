@@ -32,6 +32,7 @@ export interface LeftbarProps {
 
 export interface ProductState {
   products: Product[];
+  darkMode: boolean;
   cart: CartItem[];
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   filterLoading: 'idle' | 'pending' | 'succeeded' | 'failed';

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { LeftbarProps } from '../types/Product';
+import { useSelector } from 'react-redux';
+import { selectDarkMode } from '../store/reducers/productSlice';
 
 const Leftbar: React.FC<LeftbarProps> = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const darkMode = useSelector(selectDarkMode);
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,7 +28,7 @@ const Leftbar: React.FC<LeftbarProps> = ({ children }) => {
       {isMobile ? (
         <>
           <button
-            className="md:hidden fixed top-4 left-4 bg-gray-100 hover:bg-gray-200 p-2 rounded-md z-50"
+            className={`md:hidden fixed top-4 left-4 p-2 rounded-md z-50 ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
             onClick={toggleLeftbar}
           >
             <svg
@@ -45,7 +48,7 @@ const Leftbar: React.FC<LeftbarProps> = ({ children }) => {
           </button>
 
           <div
-            className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+            className={`fixed top-0 left-0 h-full w-64 shadow-xl transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? 'translate-x-0' : '-translate-x-full'} ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'
               }`}
           >
             <div className="p-4">
@@ -60,7 +63,7 @@ const Leftbar: React.FC<LeftbarProps> = ({ children }) => {
           )}
         </>
       ) : (
-        <div className="hidden md:flex flex-col w-64 bg-gray-100 h-screen fixed top-0 left-0">
+        <div className={`hidden md:flex flex-col w-64 h-screen fixed top-0 left-0 ${darkMode ? 'bg-gray-800 text-white' : 'bg-gray-100'}`}>
           <div className="p-4 h-max-full">
             {children}
           </div>
